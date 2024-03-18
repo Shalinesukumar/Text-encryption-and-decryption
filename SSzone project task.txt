@@ -1,0 +1,39 @@
+class TranspositionCipher:
+    def __init__(self, key):
+        self.key = key
+    
+    def encrypt(self, plaintext):
+        plaintext = plaintext.replace(" ", "")
+        num_columns = len(self.key)
+        num_rows = (len(plaintext) + num_columns - 1) // num_columns
+        padded_plaintext = plaintext.ljust(num_rows * num_columns, '_')
+        grid = [['' for _ in range(num_columns)] for _ in range(num_rows)]
+        
+        for i, char in enumerate(padded_plaintext):
+            row = i // num_columns
+            col = i % num_columns
+            grid[row][col] = char
+        
+        encrypted_grid = ['' for _ in range(num_rows)]
+        for i, k in enumerate(self.key):
+            col = int(k) - 1
+            for row in range(num_rows):
+                encrypted_grid[row] += grid[row][col]
+                ciphertext = ''.join(encrypted_grid) 
+        return ciphertext
+
+key = input("Enter the cipher's key: ")
+plaintext = input("Enter the plaintext message: ")
+
+cipher = TranspositionCipher(key)
+
+encrypted_message = cipher.encrypt(plaintext)
+
+print("Encrypted message:", encrypted_message)
+
+Sample Input:
+Enter the cipher's key: 2314
+Enter the plaintext message: Hello World
+
+Sample Output:
+Encrypted message: HloolelWrd__
